@@ -1,5 +1,5 @@
-
 def main():
-    pass
-if __name__ =='___main__':
-    main()
+  print("Chatbot started")
+
+if __name__ == '__main__':
+  main()
