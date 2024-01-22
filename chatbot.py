@@ -10,12 +10,25 @@ def speech2text(audio_path, model="whisper-1", api_key=os.environ["OPENAI_API_KE
     model=model,
     file=audio_file
   )
-  return transcript
+  return transcript.text
+def prompt2answer(prompt, model="gpt-4", api_key=os.environ["OPENAI_API_KEY"]):
+  client = openai.OpenAI(api_key=api_key)
+  completion = client.chat.completions.create(
+    model=model,messages=
+    [ {"role": "system", "content": prompt} ]
+  )
+  return completion.choices[0].message.content
+
+
+  
 def main():
   print("Chatbot started")
   audio_path = "recordings/CapitalOfSudan.m4a"
   transcript = speech2text(audio_path)
-  print(transcript.text)
+  print(f'Transcript: {transcript}')
+  prompt = transcript
+  response = prompt2answer(prompt)
+  print(f"Chatbot: {response}")
 
 if __name__ == '__main__':
   main()
