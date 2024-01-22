@@ -12,8 +12,6 @@ def speech2text(audio_path, model="whisper-1", api_key=os.environ["OPENAI_API_KE
   )
   return transcript
 def main():
-  apikey = os.environ["OPENAI_API_KEY"]
-  client = openai.OpenAI()
   print("Chatbot started")
   audio_path = "recordings/CapitalOfSudan.m4a"
   transcript = speech2text(audio_path)
