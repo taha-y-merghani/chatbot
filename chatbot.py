@@ -19,7 +19,6 @@ def prompt2answer(prompt, model="gpt-4", api_key=os.environ["OPENAI_API_KEY"]):
   )
   return completion.choices[0].message.content
 
-
   
 def main():
   print("Chatbot started")
