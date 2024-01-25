@@ -12,6 +12,9 @@ def speech2text(audio_path, model="whisper-1", api_key=os.environ["OPENAI_API_KE
   )
   return transcript.text
 def prompt2answer(prompt, model="gpt-4", api_key=os.environ["OPENAI_API_KEY"]):
+  """ 
+  Function to answer question by autocompletion 
+  """
   client = openai.OpenAI(api_key=api_key)
   completion = client.chat.completions.create(
     model=model,messages=
