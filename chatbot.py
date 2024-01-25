@@ -1,9 +1,13 @@
 import openai
 import os
-def speech2text(audio_path, model="whisper-1", api_key=os.environ["OPENAI_API_KEY"]):
+import whisper
+import sys
+def speech2text(audio_path, model="whisper-1", api_key=os.environ["OPENAI_API_KEY"], locally=False):
   '''
-  Function to transcribe an audio file to text using OpenAI Speech API
+  Function to transcribe an audio file to text using OpenAI Speech API or locally 
   '''
+  if locally:
+    return whisper.load_model("small").transcribe(audio_path)
   client = openai.OpenAI(api_key=api_key)
   audio_file = open(audio_path, "rb")
   transcript = client.audio.transcriptions.create( 
@@ -22,15 +26,19 @@ def prompt2answer(prompt, model="gpt-4", api_key=os.environ["OPENAI_API_KEY"]):
   )
   return completion.choices[0].message.content
 
-  
+
 def main():
-  print("Chatbot started")
-  audio_path = "recordings/CapitalOfSudan.m4a"
-  transcript = speech2text(audio_path)
-  print(f'Transcript: {transcript}')
-  prompt = transcript
-  response = prompt2answer(prompt)
-  print(f"Chatbot: {response}")
+    if len(sys.argv) < 2:
+        print("Usage: script.py <audio_file_path>")
+        sys.exit(1)
+
+    print("Chatbot started")
+    audio_path = sys.argv[1]
+    transcript = speech2text(audio_path, locally=True)
+    print(f'Transcript: {transcript}')
+    prompt = transcript
+    response = prompt2answer(prompt)
+    print(f"Chatbot: {response}")
 
 if __name__ == '__main__':
   main()
