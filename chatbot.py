@@ -7,7 +7,7 @@ def speech2text(audio_path, model="whisper-1", api_key=os.environ["OPENAI_API_KE
   Function to transcribe an audio file to text using OpenAI Speech API or locally 
   '''
   if locally:
-    return whisper.load_model("small").transcribe(audio_path)
+    return whisper.load_model("small").transcribe(audio_path)["text"]
   client = openai.OpenAI(api_key=api_key)
   audio_file = open(audio_path, "rb")
   transcript = client.audio.transcriptions.create( 
