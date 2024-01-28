@@ -1,3 +1,4 @@
 recordings/
 flask_app.py
 .DS_Store
+llama.cpp/
