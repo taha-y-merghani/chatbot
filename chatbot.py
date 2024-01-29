@@ -2,7 +2,9 @@ import openai
 import os
 import whisper
 import sys
-def speech2text(audio_path, model="whisper-1", api_key=os.environ["OPENAI_API_KEY"], locally=False):
+def get_api_key():
+    return os.environ["OPENAI_API_KEY"]
+def speech2text(audio_path, model="whisper-1", api_key=get_api_key(), locally=False):
   '''
   Function to transcribe an audio file to text using OpenAI Speech API or locally 
   '''
@@ -15,7 +17,7 @@ def speech2text(audio_path, model="whisper-1", api_key=os.environ["OPENAI_API_KE
     file=audio_file
   )
   return transcript.text
-def prompt2answer(prompt, model="gpt-4", api_key=os.environ["OPENAI_API_KEY"]):
+def prompt2answer(prompt, model="gpt-4", api_key=get_api_key()):
   """ 
   Function to answer question by autocompletion 
   """
@@ -34,7 +36,7 @@ def main():
 
     print("Chatbot started")
     audio_path = sys.argv[1]
-    transcript = speech2text(audio_path, locally=True)
+    transcript = speech2text(audio_path, locally=False)
     print(f'Transcript: {transcript}')
     prompt = transcript
     response = prompt2answer(prompt)
