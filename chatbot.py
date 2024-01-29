@@ -9,6 +9,7 @@ def speech2text(audio_path, model="whisper-1", api_key=get_api_key(), locally=Fa
   Function to transcribe an audio file to text using OpenAI Speech API or locally 
   '''
   if locally:
+    print('locally ...')
     return whisper.load_model("base").transcribe(audio_path)["text"]
   client = openai.OpenAI(api_key=api_key)
   audio_file = open(audio_path, "rb")
@@ -36,7 +37,7 @@ def main():
 
     print("Chatbot started")
     audio_path = sys.argv[1]
-    transcript = speech2text(audio_path, locally=False)
+    transcript = speech2text(audio_path, locally=True)
     print(f'Transcript: {transcript}')
     prompt = transcript
     response = prompt2answer(prompt)
