@@ -4,3 +4,6 @@ Usage:
 `pip install -r requirements.txt`
 
  python chatbot.py <audio_file_path>
+
+ Coming soon:
+Mistral 7B locally for text completion
