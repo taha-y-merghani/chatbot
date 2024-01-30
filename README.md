@@ -7,7 +7,7 @@ Usage:
  
  
  For example: 
- python chatbot.py RandasQuestion.ogg
+ `python chatbot.py RandasQuestion.ogg`
 
  Coming soon:
 Mistral 7B locally for text completion
