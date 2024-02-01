@@ -2,6 +2,7 @@ import openai
 import os
 import whisper
 import sys
+import subprocess
 def get_api_key():
     return os.environ["OPENAI_API_KEY"]
 def speech2text(audio_path, model="whisper-1", api_key=get_api_key(), locally=False):
@@ -18,10 +19,15 @@ def speech2text(audio_path, model="whisper-1", api_key=get_api_key(), locally=Fa
     file=audio_file
   )
   return transcript.text
-def prompt2answer(prompt, model="gpt-4", api_key=get_api_key()):
+def prompt2answer(prompt, model="gpt-4", api_key=get_api_key(), locally=False):
   """ 
   Function to answer question by autocompletion 
   """
+  if locally:
+    print('locally ...')
+    result = subprocess.run([f"""
+    llama.cpp/main 2>/dev/null -e -p "{prompt}" -m "../models/mistral-7b-instruct-v0.1.Q6_K.gguf" -ngl 30000"""], shell=True,  stdout=subprocess.PIPE, text=True)
+    return result.stdout
   client = openai.OpenAI(api_key=api_key)
   completion = client.chat.completions.create(
     model=model,messages=
@@ -40,7 +46,7 @@ def main():
     transcript = speech2text(audio_path, locally=True)
     print(f'Transcript: {transcript}')
     prompt = transcript
-    response = prompt2answer(prompt)
+    response = prompt2answer(prompt, locally=True)
     print(f"Chatbot: {response}")
 
 if __name__ == '__main__':
