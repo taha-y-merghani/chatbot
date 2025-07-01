@@ -1,20 +1,166 @@
-# What is this?
+# Audio-to-AI Chatbot
 
-This is just a mini chatbot run locally with a speech2text interface with [openai's whisper](https://github.com/openai/whisper), and it answers using [mistral 7b](https://mistral.ai/news/announcing-mistral-7b/).
+A robust, locally-running chatbot that transcribes audio input and generates AI responses using OpenAI Whisper for speech-to-text and Ollama for language model inference.
 
-This app was tested primarily on Google Colab Pro's NVIDIA V100 GPU, but I would be curious to see your experience!
+## Features
 
-## Usage:
-`pip install -r requirements.txt`
+- 🎤 **Speech-to-Text**: Uses OpenAI Whisper for accurate audio transcription
+- 🤖 **AI Responses**: Powered by Mistral 7B model via Ollama
+- 🔒 **Security**: Input sanitization and secure subprocess handling
+- ⚡ **Error Handling**: Comprehensive error handling and graceful failure recovery
+- 🖥️ **Hardware Optimized**: Configurable timeouts for various hardware capabilities
+- 📁 **File Validation**: Checks for audio file existence before processing
 
-`sh setup.sh`
+## Prerequisites
 
-In a seperate terminal run:
-`ollama serve`
+- Python 3.9+
+- Ollama installed and running
+- Audio file in a supported format (WAV, MP3, OGG, etc.)
 
-Return to the first terminal and run on the example audio file provided.
- `python chatbot.py RandasQuestion.ogg`
+## Installation
 
- Coming soon:
-- UI with gradio
-- full control for LLMs other than mistral that are supported by [ollama](https://github.com/ollama/ollama)
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/taha-y-merghani/chatbot.git
+   cd chatbot
+   ```
+
+2. **Install Python dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run the setup script:**
+   ```bash
+   sh setup.sh
+   ```
+
+4. **Start Ollama server** (in a separate terminal):
+   ```bash
+   ollama serve
+   ```
+
+5. **Download a language model** (if not already available):
+   ```bash
+   ollama pull mistral:latest
+   ```
+
+## Usage
+
+### Basic Usage
+```bash
+python chatbot.py <audio_file_path>
+```
+
+### Example
+```bash
+python chatbot.py RandasQuestion.ogg
+```
+
+### Expected Output
+```
+Chatbot started
+Transcript: What are the human rights principle of the UN?
+Clean transcript: "What are the human rights principle of the UN?"
+Running Ollama with prompt: What are the human rights principle of the UN?
+Chatbot: [AI response about UN human rights principles...]
+```
+
+## Configuration
+
+### Model Selection
+The chatbot uses `mistral:latest` by default. To use a different model:
+
+1. Download your preferred model:
+   ```bash
+   ollama pull <model_name>
+   ```
+
+2. Update the model name in `chatbot.py`:
+   ```python
+   result = subprocess.run(
+       ['ollama', 'run', '<your_model_name>', prompt],
+       # ... rest of parameters
+   )
+   ```
+
+### Timeout Configuration
+For slower hardware, you can increase the timeout in `chatbot.py`:
+```python
+timeout=300  # 5 minutes (default)
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"ollama server not responding"**
+   - Ensure Ollama server is running: `ollama serve`
+   - Check if Ollama is installed correctly
+
+2. **"Ollama command timed out"**
+   - Increase the timeout value in the code
+   - Check system resources (CPU, RAM)
+   - Consider using a smaller/faster model
+
+3. **"Import whisper could not be resolved"**
+   - Ensure you're in the correct virtual environment
+   - Reinstall dependencies: `pip install -r requirements.txt`
+
+4. **"Audio file not found"**
+   - Verify the audio file path is correct
+   - Ensure the file exists and is readable
+
+5. **NumPy compatibility issues**
+   - The script automatically handles NumPy version conflicts
+   - If issues persist, manually install: `pip install "numpy<2"`
+
+### Performance Tips
+
+- **First run**: The model may take several minutes to load initially
+- **Hardware**: More RAM and CPU cores will improve performance
+- **Model size**: Smaller quantized models run faster on limited hardware
+
+## Supported Models
+
+The chatbot works with any model available in Ollama. Popular options include:
+- `mistral:latest` (default)
+- `llama2:latest`
+- `codellama:latest`
+- `phi:latest`
+
+## Development
+
+### Project Structure
+```
+chatbot/
+├── chatbot.py          # Main chatbot script
+├── requirements.txt    # Python dependencies
+├── setup.sh           # Setup script
+├── README.md          # This file
+└── RandasQuestion.ogg # Example audio file
+```
+
+### Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is open source. Feel free to use, modify, and distribute.
+
+## Acknowledgments
+
+- [OpenAI Whisper](https://github.com/openai/whisper) for speech-to-text
+- [Mistral AI](https://mistral.ai/) for the language model
+- [Ollama](https://github.com/ollama/ollama) for local model serving
+
+## Coming Soon
+
+- 🎨 **Gradio UI**: Web interface for easier interaction
+- 🔧 **Model Selection**: Dynamic model switching without code changes
+- 📊 **Performance Metrics**: Response time and accuracy tracking
+- 🎵 **Real-time Audio**: Live audio processing capabilities
