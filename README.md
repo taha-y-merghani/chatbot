@@ -1,15 +1,18 @@
 # Audio-to-AI Chatbot
 
-A robust, locally-running chatbot that transcribes audio input and generates AI responses using OpenAI Whisper for speech-to-text and Ollama for language model inference.
+A robust, locally-running chatbot that transcribes audio input and generates AI responses using OpenAI Whisper for speech-to-text and Ollama for language model inference. Available as both a command-line tool and a modern web interface.
 
 ## Features
 
 - 🎤 **Speech-to-Text**: Uses OpenAI Whisper for accurate audio transcription
 - 🤖 **AI Responses**: Powered by Mistral 7B model via Ollama
+- 🌐 **Web Interface**: Modern Gradio UI with step-by-step workflow
+- 💻 **Command Line**: Simple CLI for automation and scripting
 - 🔒 **Security**: Input sanitization and secure subprocess handling
 - ⚡ **Error Handling**: Comprehensive error handling and graceful failure recovery
 - 🖥️ **Hardware Optimized**: Configurable timeouts for various hardware capabilities
 - 📁 **File Validation**: Checks for audio file existence before processing
+- 🚀 **Immediate Feedback**: See transcription results instantly
 
 ## Prerequisites
 
@@ -47,17 +50,36 @@ A robust, locally-running chatbot that transcribes audio input and generates AI 
 
 ## Usage
 
-### Basic Usage
+### Web Interface (Recommended)
+
+Launch the Gradio web interface:
+```bash
+python gradio_app.py
+```
+
+The interface will be available at:
+- **Local URL**: `http://localhost:7860`
+- **Public URL**: A shareable link will be displayed (valid for 72 hours)
+
+#### Web Interface Features:
+- **Step 1**: Upload audio file → Click "Transcribe Audio" → See transcription immediately
+- **Step 2**: Click "Generate AI Response" → Get AI response from transcription
+- **Quick Test**: Use the example audio for instant testing
+- **Real-time Feedback**: No waiting for both steps to complete
+
+### Command Line Interface
+
+#### Basic Usage
 ```bash
 python chatbot.py <audio_file_path>
 ```
 
-### Example
+#### Example
 ```bash
 python chatbot.py RandasQuestion.ogg
 ```
 
-### Expected Output
+#### Expected Output
 ```
 Chatbot started
 Transcript: What are the human rights principle of the UN?
@@ -115,11 +137,17 @@ timeout=300  # 5 minutes (default)
    - The script automatically handles NumPy version conflicts
    - If issues persist, manually install: `pip install "numpy<2"`
 
+6. **Gradio interface not loading**
+   - Check if port 7860 is available
+   - Try accessing the public URL instead of localhost
+   - Ensure all dependencies are installed correctly
+
 ### Performance Tips
 
 - **First run**: The model may take several minutes to load initially
 - **Hardware**: More RAM and CPU cores will improve performance
 - **Model size**: Smaller quantized models run faster on limited hardware
+- **Web interface**: Use the step-by-step process for better control
 
 ## Supported Models
 
@@ -134,7 +162,8 @@ The chatbot works with any model available in Ollama. Popular options include:
 ### Project Structure
 ```
 chatbot/
-├── chatbot.py          # Main chatbot script
+├── chatbot.py          # Command-line interface
+├── gradio_app.py       # Web interface (Gradio)
 ├── requirements.txt    # Python dependencies
 ├── setup.sh           # Setup script
 ├── README.md          # This file
@@ -157,10 +186,12 @@ This project is open source. Feel free to use, modify, and distribute.
 - [OpenAI Whisper](https://github.com/openai/whisper) for speech-to-text
 - [Mistral AI](https://mistral.ai/) for the language model
 - [Ollama](https://github.com/ollama/ollama) for local model serving
+- [Gradio](https://gradio.app/) for the web interface
 
 ## Coming Soon
 
-- 🎨 **Gradio UI**: Web interface for easier interaction
 - 🔧 **Model Selection**: Dynamic model switching without code changes
 - 📊 **Performance Metrics**: Response time and accuracy tracking
 - 🎵 **Real-time Audio**: Live audio processing capabilities
+- 🔄 **Batch Processing**: Process multiple audio files at once
+- 📱 **Mobile Optimization**: Better mobile device support
