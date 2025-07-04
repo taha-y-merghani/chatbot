@@ -1,6 +1,9 @@
 import gradio as gr
 from chatbot import speech2text, prompt2answer
 
+# Add FastAPI import for ASGI compatibility
+from fastapi import FastAPI
+
 def transcribe_audio(audio_file):
     """
     Transcribe audio file only
@@ -78,6 +81,10 @@ with gr.Blocks(title="Audio-to-AI Chatbot") as demo:
         outputs=example_answer
     )
 
-# Launch the app
+# Mount Gradio app as ASGI app for uvicorn compatibility
+app = FastAPI()
+app = gr.mount_gradio_app(app, demo, path="/")
+
+# Launch the app if run directly
 if __name__ == "__main__":
     demo.launch(share=True, server_name="0.0.0.0")
