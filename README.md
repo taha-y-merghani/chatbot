@@ -13,6 +13,7 @@ A robust, locally-running chatbot that transcribes audio input and generates AI 
 - 🖥️ **Hardware Optimized**: Configurable timeouts for various hardware capabilities
 - 📁 **File Validation**: Checks for audio file existence before processing
 - 🚀 **Immediate Feedback**: See transcription results instantly
+- 🟢 **ASGI Compatible**: Now runs as a uvicorn/FastAPI ASGI app for production-ready deployment
 
 ## Prerequisites
 
@@ -52,14 +53,21 @@ A robust, locally-running chatbot that transcribes audio input and generates AI 
 
 ### Web Interface (Recommended)
 
-Launch the Gradio web interface:
+#### **ASGI/uvicorn Launch (Recommended for Production & Development)**
+
+Run the Gradio web interface as an ASGI app using uvicorn:
 ```bash
-python gradio_app.py
+uvicorn gradio_app:app --host 0.0.0.0 --port 7860
 ```
 
 The interface will be available at:
 - **Local URL**: `http://localhost:7860`
-- **Public URL**: A shareable link will be displayed (valid for 72 hours)
+- **Remote/Server URL**: `http://<your-server-ip>:7860`
+
+#### **Classic Launch (for local quick testing)**
+```bash
+python gradio_app.py
+```
 
 #### Web Interface Features:
 - **Step 1**: Upload audio file → Click "Transcribe Audio" → See transcription immediately
@@ -139,7 +147,7 @@ timeout=300  # 5 minutes (default)
 
 6. **Gradio interface not loading**
    - Check if port 7860 is available
-   - Try accessing the public URL instead of localhost
+   - Try accessing the public or remote URL instead of localhost
    - Ensure all dependencies are installed correctly
 
 ### Performance Tips
@@ -163,7 +171,7 @@ The chatbot works with any model available in Ollama. Popular options include:
 ```
 chatbot/
 ├── chatbot.py          # Command-line interface
-├── gradio_app.py       # Web interface (Gradio)
+├── gradio_app.py       # Web interface (Gradio, now ASGI/uvicorn compatible)
 ├── requirements.txt    # Python dependencies
 ├── setup.sh           # Setup script
 ├── README.md          # This file
