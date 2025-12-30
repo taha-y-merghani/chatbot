@@ -1,6 +1,42 @@
-# Audio-to-AI Chatbot
+# Local-First Voice Agent: High-Latency Orchestration on Legacy Hardware
 
-A robust, locally-running chatbot that transcribes audio input and generates AI responses using OpenAI Whisper for speech-to-text and Ollama for language model inference. Available as both a command-line tool and a modern web interface.
+**The Problem:** Cloud APIs solve the easy problem. Can you build a production-ready voice agent on 2015 hardware (no GPU, 8GB RAM, thermal throttling)?
+
+This project demonstrates **constraint-driven systems engineering**: orchestrating Whisper + Ollama + Gradio on consumer hardware where every subprocess can timeout, crash, or conflict. When Cursor failed (couldn't see system constraints), I debugged at the process level.
+
+**Read the full architecture breakdown:** [`ARCHITECTURE.md`](./ARCHITECTURE.md)
+
+---
+
+## The Constraint
+
+- **Hardware:** 2015 MacBook Pro (no GPU, integrated graphics only, 8GB RAM shared across OS/Whisper/Ollama)
+- **Challenge:** Multi-process orchestration with 20-25s end-to-end latency
+- **Goal:** Ship a working system, not just a demo
+
+## Key Engineering Challenges Solved
+
+### 1. Subprocess Lifecycle Management
+**Problem:** Ollama can crash mid-inference. Whisper can hang on corrupted audio.
+
+**Solution:** Programmatic health checks, timeout handling, graceful restarts.
+
+### 2. NumPy ABI Compatibility
+**Problem:** `whisper` expects NumPy 1.24.x, `gradio` expects 1.23.x, ARM vs Intel has different binaries.
+
+**Solution:** Pin versions explicitly, detect ABI mismatches at runtime.
+
+### 3. Latency Under Constraints
+**Problem:** 15-20s Whisper + 12s Ollama = unusable UX.
+
+**Solution:** Quantized models (3x speedup), sequential pipeline optimization.
+
+### 4. When Abstraction Fails
+**Problem:** Cursor suggested "increase timeout" when Whisper hung.
+
+**Reality:** Audio file was corrupted. Used `ffprobe` to validate before processing.
+
+---
 
 ## Features
 
