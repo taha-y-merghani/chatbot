@@ -1,8 +1,8 @@
 # Local-First Voice Agent: High-Latency Orchestration on Legacy Hardware
 
-**The Problem:** Cloud APIs solve the easy problem. Can you build a production-ready voice agent on 2015 hardware (no GPU, 8GB RAM, thermal throttling)?
+**The Problem:** Cloud APIs solve the easy problem. Can you build a voice agent on 2015 hardware (no GPU, limited RAM, thermal throttling)?
 
-This project demonstrates **constraint-driven systems engineering**: orchestrating Whisper + Ollama + Gradio on consumer hardware where every subprocess can timeout, crash, or conflict. When Cursor failed (couldn't see system constraints), I debugged at the process level.
+This project demonstrates **constraint-driven engineering**: orchestrating Whisper + Ollama + Gradio on consumer hardware. When Cursor fixed everything else but missed the hardware constraint, I debugged at the system level.
 
 **Read the full architecture breakdown:** [`ARCHITECTURE.md`](./ARCHITECTURE.md)
 
@@ -10,31 +10,30 @@ This project demonstrates **constraint-driven systems engineering**: orchestrati
 
 ## The Constraint
 
-- **Hardware:** 2015 MacBook Pro (no GPU, integrated graphics only, 8GB RAM shared across OS/Whisper/Ollama)
-- **Challenge:** Multi-process orchestration with 20-25s end-to-end latency
+- **Hardware:** 2015 MacBook Pro (no GPU, integrated graphics only)
+- **Challenge:** Local inference on old hardware with slow response times
 - **Goal:** Ship a working system, not just a demo
 
-## Key Engineering Challenges Solved
+## What Cursor Fixed
 
-### 1. Subprocess Lifecycle Management
-**Problem:** Ollama can crash mid-inference. Whisper can hang on corrupted audio.
+When I opened this project in Cursor, it caught:
+- NumPy version conflicts breaking PyTorch
+- Insecure subprocess calls (rewrote them safely)
+- Missing error handling (added try/except blocks)
+- Wrong model name
+- Code structure issues
 
-**Solution:** Programmatic health checks, timeout handling, graceful restarts.
+## What Cursor Missed
 
-### 2. NumPy ABI Compatibility
-**Problem:** `whisper` expects NumPy 1.24.x, `gradio` expects 1.23.x, ARM vs Intel has different binaries.
+After all the fixes, I tested it with: *"What are the human rights principles of the UN?"*
 
-**Solution:** Pin versions explicitly, detect ABI mismatches at runtime.
+Whisper transcribed it. The prompt went through. Then Ollama hung.
 
-### 3. Latency Under Constraints
-**Problem:** 15-20s Whisper + 12s Ollama = unusable UX.
+**The Problem:** Mistral needed more than 30 seconds to respond on my hardware. Cursor assumed my machine was fast. It wasn't.
 
-**Solution:** Quantized models (3x speedup), sequential pipeline optimization.
+**The Solution:** Raised the timeout to 5 minutes (300 seconds).
 
-### 4. When Abstraction Fails
-**Problem:** Cursor suggested "increase timeout" when Whisper hung.
-
-**Reality:** Audio file was corrupted. Used `ffprobe` to validate before processing.
+**The Lesson:** AI assistants generate code. Engineers debug systems. Tools don't know your constraints - you do.
 
 ---
 
